@@ -1,7 +1,6 @@
 import boto3
 
-session = boto3.Session(profile_name='my-dev-profile')
-client = session.client('lambda')
+client = boto3.client('lambda')
 response = client.invoke(
     FunctionName='myFunction',
     # InvocationType='Event', # async invocation

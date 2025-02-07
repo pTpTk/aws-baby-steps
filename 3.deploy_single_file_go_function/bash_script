@@ -2,6 +2,6 @@ GOOS=linux GOARCH=amd64 go build -tags lambda.norpc -o bootstrap main.go
 
 zip myFunction.zip bootstrap
 
-aws lambda create-function --function-name myFunction --runtime provided.al2023 --handler bootstrap --role arn:aws:iam::430118847380:role/lambdaexecute --zip-file fileb://myFunction.zip --profile my-dev-profile
+aws lambda create-function --function-name myFunction --runtime provided.al2023 --handler bootstrap --role arn:aws:iam::356764711652:role/aes-go-lambda-role --zip-file fileb://myFunction.zip --profile my-dev-profile
 
 python test.py
