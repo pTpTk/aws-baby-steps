@@ -1,0 +1,106 @@
+// package main
+// 
+// import (
+// 	"github.com/aws/aws-sdk-go-v2/aws"
+// 	"github.com/aws/aws-sdk-go-v2/config"
+// 	"github.com/aws/aws-sdk-go-v2/service/lambda"
+// 
+// 	"encoding/json"
+// 	"fmt"
+// 	"os"
+// )
+// 
+// // // The go equivalent of enum
+// // type RequestType int
+// // 
+// // const (
+// // 	Reserve RequestType = iota
+// // 	Check
+// // )
+// // 
+// // type ReservationRequest struct {
+// // 	requestType  RequestType `json:"request_type"`
+// // 	customerName string      `json:"customer_name"`
+// // 	hotelId    []string      `json:"hotel_id"`
+// // 	inDate       string      `json:"in_date"`
+// // 	outDate      string      `json:"out_date"`
+// // 	roomNumber   int         `json:"room_number"`
+// // }
+// 
+// 
+// func main() {
+// 	mySession := session.Must(session.NewSession())
+// 
+// 	// Create a Lambda client with additional configuration
+// 	client := lambda.New(mySession)
+// 
+// 	req := Req{
+// 		key1: "V1",
+// 		key2: "value2",
+//   		key3: "value3",
+// 	}
+// 
+// 	payload, err := json.Marshal(req)
+// 	if err != nil {
+// 		fmt.Println("Error marshalling MyGetItemsFunction request")
+// 		os.Exit(0)
+// 	}
+// 
+// 	result, err := client.Invoke(&lambda.InvokeInput{FunctionName: aws.String("myFunction"), Payload: payload})
+// 	if err != nil {
+// 		fmt.Println("Error calling MyGetItemsFunction")
+// 		os.Exit(0)
+// 	}
+// 
+// 	fmt.Println(result)
+// }
+// 
+
+package main
+
+import (
+	"context"
+	"fmt"
+	"encoding/json"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
+)
+
+type Req struct {
+	V1 string `json:"key1"`
+	V2 string `json:"key2"`
+	V3 string `json:"key3"`
+}
+
+// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10
+// functions in your account.
+// This example uses the default settings specified in your shared credentials
+// and config files.
+func main() {
+	ctx := context.Background()
+	sdkConfig, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		fmt.Println("Couldn't load default configuration. Have you set up your AWS account?")
+		fmt.Println(err)
+		return
+	}
+	lambdaClient := lambda.NewFromConfig(sdkConfig)
+
+ 	req := Req{
+ 		V1: "V1",
+ 		V2: "value2",
+   		V3: "value3",
+ 	}
+
+	payload, err := json.Marshal(req)
+
+	output, err := lambdaClient.Invoke(ctx, &lambda.InvokeInput{
+		FunctionName: aws.String("myFunction"),
+		LogType:      types.LogTypeNone,
+		Payload:      payload,
+	})
+	fmt.Printf("%s", output.Payload)
+}
