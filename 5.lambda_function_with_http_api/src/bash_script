@@ -1,7 +1,9 @@
-GOOS=linux GOARCH=amd64 go build -tags lambda.norpc -o bootstrap main.go
+GOOS=linux GOARCH=amd64 go build -o bootstrap main.go
 
 zip HttpTest.zip bootstrap
 
 aws lambda create-function --function-name HttpTest --runtime provided.al2023 --handler bootstrap --role arn:aws:iam::356764711652:role/aes-go-lambda-role --zip-file fileb://HttpTest.zip
+
+aws lambda update-function-code --function-name HttpTest --zip-file fileb://HttpTest.zip
 
 python test.py
